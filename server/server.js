@@ -3,10 +3,11 @@ const cors = require("cors");
 require("dotenv").config();
 const PORT = process.env.PORT || 8080;
 const app = express();
+app.use(cors());
 const axios = require("axios");
 
 
-app.get("/", async (_, response) => response.json("Root route for translatim."));
+app.get("/", (_, response) => response.json("Root route for translatim."));
 
 app.get("/translate", async (request, response)=>{
     // word to from
@@ -19,12 +20,12 @@ app.get("/translate", async (request, response)=>{
     const API = `https://api.mymemory.translated.net/get?q=${word}&langpair=${from}|${to}`;
     const res = await axios.get(API);
 
-const wrangleData = {
+const wrangledData = {
     translation: res.data.responseData.translatedText,
-    match
+    match: res.data.responseData.match,
 }
 
-    response.json(res.data.responseData.translatedText);
+    response.json(wrangledData);
 })
 
 app.listen(PORT, () => console.log(`App is running PORT ${PORT}`));
